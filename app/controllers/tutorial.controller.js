@@ -46,7 +46,19 @@ exports.findAll = (req, res) => {
 };
 
 // Find a single Tutorial with an id
-exports.findOne = (req, res) => {};
+exports.findOne = (req, res) => {
+  const id = req.params.id;
+
+  Tutorial.findByPk(id)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .send({ message: "error retrieving tutorial with id=" + id });
+    });
+};
 
 // Update a Tutorial by the id in the request
 exports.update = (req, res) => {};
