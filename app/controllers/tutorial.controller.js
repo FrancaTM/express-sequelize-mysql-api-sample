@@ -61,7 +61,25 @@ exports.findOne = (req, res) => {
 };
 
 // Update a Tutorial by the id in the request
-exports.update = (req, res) => {};
+exports.update = (req, res) => {
+  const id = req.params.id;
+
+  Tutorial.update(req.body, { where: { id: id } })
+    .then((num) => {
+      if (num == 1) {
+        res.send({ message: "tutorial updated successfully" });
+      } else {
+        res.send({
+          message: `can't update tutorial with id=${id}. Maybe tutorial not found or req.body empty`,
+        });
+      }
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .send({ message: "error updating tutorial with id=" + id });
+    });
+};
 
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {};
