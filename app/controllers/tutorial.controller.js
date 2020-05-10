@@ -103,7 +103,17 @@ exports.delete = (req, res) => {
 };
 
 // Delete all Tutorials from the database.
-exports.deleteAll = (req, res) => {};
+exports.deleteAll = (req, res) => {
+  Tutorial.destroy({ where: {}, truncate: false })
+    .then((nums) => {
+      res.send({ message: `${nums} tutorials deleted successfully` });
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .send({ message: err.message || "error while removing tutorials" });
+    });
+};
 
 // Find all published Tutorials
 exports.findAllPublished = (req, res) => {};
