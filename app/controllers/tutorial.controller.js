@@ -1,6 +1,77 @@
 const db = require("../models");
 const Tutorial = db.tutorials;
+const Comment = db.comments;
 const Op = db.Sequelize.Op;
+
+// create and save new tutorials
+exports.createTutorial = (tutorialData) => {
+  const tutorial = {
+    title: tutorialData.title,
+    description: tutorialData.description,
+  };
+
+  return Tutorial.create(tutorial)
+    .then((tutorial) => {
+      console.log(">> Created tutorial: " + JSON.stringify(tutorial, null, 4));
+      return tutorial;
+    })
+    .catch((err) => {
+      console.log(">> Error while creating tutorial: ", err);
+    });
+};
+
+// create and save new comments
+exports.createComment = (tutorialId, commentData) => {
+  const comment = {
+    name: commentData.name,
+    text: commentData.text,
+    tutorialId: tutorialId,
+  };
+
+  return Comment.create(comment)
+    .then((comment) => {
+      console.log(">> Created comment: " + JSON.stringify(comment, null, 4));
+      return comment;
+    })
+    .catch((err) => {
+      console.log(">> Error while creating comment: ", err);
+    });
+};
+
+// get comments for tutorial
+exports.findTutorialById = (tutorialId) => {
+  return Tutorial.findByPk(tutorialId, {
+    include: ["comments"],
+  })
+    .then((tutorial) => {
+      return tutorial;
+    })
+    .catch((err) => {
+      console.log(">> Error while finding tutorial: ", err);
+    });
+};
+
+// get comments for a given comment id
+exports.findCommentById = (id) => {
+  return Comment.findByPk(id, {
+    include: ["tutorial"],
+  })
+    .then((comment) => {
+      return comment;
+    })
+    .catch((err) => {
+      console.log(">> Error while finding comment: ", err);
+    });
+};
+
+// get all tutorials and comments
+exports.findAll = () => {
+  return Tutorial.findAll({
+    include: ["comments"],
+  }).then((tutorials) => {
+    return tutorials;
+  });
+};
 
 // Create and Save a new Tutorial
 exports.create = (req, res) => {
